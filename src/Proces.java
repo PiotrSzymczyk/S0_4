@@ -92,6 +92,9 @@ public class Proces {
         return tmp;
     }
 
+    public int getPriority(){
+        return priority;
+    }
     public int lastTimeUsed(Page p){
         int tmp = Integer.MAX_VALUE;
         for(int i = 0; i < used.size();i++){
