@@ -11,7 +11,6 @@ public class Proces {
     private Page[] pageList;
     private LinkedList<Page> pages; // Odwołania do kolejnych stron
     private LinkedList<Page> used; 
-    private int priority;
     private int interval;
     private int wSetLen;
     
@@ -20,7 +19,6 @@ public class Proces {
      */
     public Proces(int in, int num){
         interval = in;
-        priority = (int)(Math.random() * 10);
         pageList = new Page[(int) (Math.random() * num + 1)];
         wSetLen = (int) (pageList.length * 0.7);
         pages = new LinkedList();
@@ -48,7 +46,6 @@ public class Proces {
      */
      public Proces(int in){
         interval = in;
-        priority = (int)(Math.random() * 10);
         pageList = new Page[(int) (Math.random() * 18 + 3)];
         wSetLen = (int) (pageList.length * 0.7);
         pages = new LinkedList();
@@ -70,7 +67,7 @@ public class Proces {
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
     }
      
-    private void setWSetLen(){
+    private void setWSetSize(){
         wSetLen = 0;
         for(Page p : pageList){
             if(p.getModB() == 1){
@@ -80,7 +77,7 @@ public class Proces {
         }
     }
     
-    public int getWSetLen(){
+    public int getWSetSize(){
         return wSetLen;
     }
     
@@ -92,8 +89,8 @@ public class Proces {
         return tmp;
     }
 
-    public int getPriority(){
-        return priority;
+    public int getSize(){
+        return pageList.length;
     }
     public int lastTimeUsed(Page p){
         int tmp = Integer.MAX_VALUE;
