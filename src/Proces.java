@@ -13,11 +13,13 @@ public class Proces {
     private LinkedList<Page> used; 
     private int interval;
     private int wSetLen;
+    private int pageErrors;
     
      /**
      * Tworzy proces o zadanej ilości stron i losowym, (2-5)-strefowym ciągu odwołań
      */
     public Proces(int in, int num){
+        pageErrors = 0;
         interval = in;
         pageList = new Page[(int) (Math.random() * num + 1)];
         wSetLen = (int) (pageList.length * 0.7);
@@ -45,6 +47,7 @@ public class Proces {
      * Tworzy proces o 3 - 20 stronach i losowym, (2-5)-strefowym ciągu odwołań
      */
      public Proces(int in){
+        pageErrors = 0;
         interval = in;
         pageList = new Page[(int) (Math.random() * 18 + 3)];
         wSetLen = (int) (pageList.length * 0.7);
@@ -66,7 +69,7 @@ public class Proces {
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
     }
-     
+    
     private void setWSetSize(){
         wSetLen = 0;
         for(Page p : pageList){
@@ -79,6 +82,14 @@ public class Proces {
     
     public int getWSetSize(){
         return wSetLen;
+    }
+    
+    public int getErrors(){
+        return pageErrors;
+    }
+    
+    public void incrErrors(){
+        pageErrors++;
     }
     
     public Page getPage(){
