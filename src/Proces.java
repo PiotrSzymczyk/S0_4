@@ -85,7 +85,7 @@ public class Proces {
         Page tmp = pages.remove(0);
         used.add(0,tmp);
         tmp.setModB(1);
-        if(used.size() != 1 && used.size() % interval == 0 ) setWSetLen();
+        if(used.size() != 1 && used.size() % interval == 0 ) setWSetSize();
         return tmp;
     }
 
