@@ -7,7 +7,6 @@ import java.util.LinkedList;
  * @author Piotrek
  */
 public class Proces {
-    
     private Page[] pageList;
     private LinkedList<Page> pages; // Odwołania do kolejnych stron
     private LinkedList<Page> used; 
@@ -22,7 +21,7 @@ public class Proces {
         pageErrors = 0;
         interval = in;
         pageList = new Page[(int) (Math.random() * num + 1)];
-        wSetLen = (int) (pageList.length * 0.7);
+        wSetLen = (int) (pageList.length * 0.4);
         pages = new LinkedList();
         used = new LinkedList();
         for(int i = 0; i < pageList.length; i++){
@@ -50,7 +49,7 @@ public class Proces {
         pageErrors = 0;
         interval = in;
         pageList = new Page[(int) (Math.random() * 18 + 3)];
-        wSetLen = (int) (pageList.length * 0.7);
+        wSetLen = (int) (pageList.length * 0.4);
         pages = new LinkedList();
         used = new LinkedList();
         for(int i = 0; i < pageList.length; i++){
