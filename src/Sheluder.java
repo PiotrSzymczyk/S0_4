@@ -54,9 +54,9 @@ public class Sheluder {
             
         }
     }
-    public void setMinSizeEqual(int min){
+    public void setMinSizeEqual(){
         for(int i = 0; i < pomocniczaEqual.length; i++){
-            pomocniczaEqual[i][1] = min;
+            pomocniczaEqual[i][1] = (int)(ramEqual.getSize()/110);
         }
     }
     public void setMinSizeProp(){
@@ -82,8 +82,13 @@ public class Sheluder {
                 }
         }
     }
-    public void execution(){     //
+    public void execution(int interval){     //
         Page page;
+        setMinSizeControl();
+        setMinSizeEqual();
+        setMinSizeProp();
+        setMinSizeStrafe();
+        int licznik=0;
         boolean isDone = false;
         while(!isDone){
             isDone = true;
@@ -121,6 +126,10 @@ public class Sheluder {
         }
         while(!isDone){
             isDone = true;
+            licznik++;
+            if(licznik%5 == 0){
+                setMinSizeControl();
+            }        
             for(int i = 0; i < listaControl.size(); i++){
                 if(!listaControl.get(i).isDone()){
                     page = listaControl.get(i).getPage();
@@ -136,7 +145,12 @@ public class Sheluder {
                 }
             }
         }
+        licznik = 0;
         while(!isDone){
+            licznik++;
+            if(licznik % interval == 0){
+                setMinSizeStrafe();
+            }
             isDone = true;
             for(int i = 0; i < listaStrafe.size(); i++){
                 if(!listaStrafe.get(i).isDone()){

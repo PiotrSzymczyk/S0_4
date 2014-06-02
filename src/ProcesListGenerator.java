@@ -14,7 +14,7 @@ public class ProcesListGenerator {
      * @param arrayLength
      * @return LinkedList
      */    
-    public LinkedList<Proces> _10Generate(int arrayLength, int interval){
+    public LinkedList<Proces> _20Generate(int arrayLength, int interval){
         LinkedList<Proces> list = new LinkedList();
         
         for(int i=0; i < arrayLength; i++){
