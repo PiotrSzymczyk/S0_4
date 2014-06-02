@@ -22,13 +22,16 @@ public class LRU{
         }
         memory.set(pom, page);
     }
-    public static void errorHandle(RAM memory, Page page, int min, int maks){
+    public static void errorHandle(RAM memory, Page page, int[][]tab){
         int spr = 0;
         int pom = 0;
-        for(int i = min; i < maks; i++){
-            if(memory.get(i).getProces().lastTimeUsed(memory.get(i)) > spr){
-                spr = memory.get(i).getProces().lastTimeUsed(memory.get(i));
-                pom = i;
+        for(int i = 0; i < memory.getSize(); i++){
+            if(tab[i][1] < tab[i][2]){
+                if(memory.get(i).getProces().lastTimeUsed(memory.get(i)) > spr){
+                    spr = memory.get(i).getProces().lastTimeUsed(memory.get(i));
+                    pom = i;
+                    tab[i][2]--;
+                }
             }
         }
         memory.set(pom, page);

@@ -42,10 +42,10 @@ public class Sheluder {
         listaEqual = (LinkedList<Proces>) prezent.clone();
         listaControl = (LinkedList<Proces>) prezent.clone();
         listaStrafe = (LinkedList<Proces>) prezent.clone();
-        pomocniczaProp = new int[prezent.size()][3];
-        pomocniczaEqual = new int[prezent.size()][3];
-        pomocniczaControl = new int[prezent.size()][3];
-        pomocniczaStrafe = new int[prezent.size()][3];
+        pomocniczaProp = new int[prezent.size()][4];
+        pomocniczaEqual = new int[prezent.size()][4]; // tablice 1sza linia zawiera numer procesu, 2ga liczbę zapewnianych ramek
+        pomocniczaControl = new int[prezent.size()][4]; // 3cia liczbę procesów w ramie, 4-ta liczbę błędów 
+        pomocniczaStrafe = new int[prezent.size()][4];
         for(int i = 0; i < prezent.size(); i++){
             pomocniczaProp[i][0] = i;
             pomocniczaEqual[i][0] = i;
@@ -61,22 +61,122 @@ public class Sheluder {
     }
     public void setMinSizeProp(){
          for(int i = 0; i < pomocniczaProp.length-1; i++){
-            pomocniczaEqual[i][1] = listaProp.get(i).getSize()/3;
+            pomocniczaProp[i][1] = listaProp.get(i).getSize()/3;
+        }
+    }
+    public void setMinSizeStrafe(){
+        for(int i = 0; i < pomocniczaStrafe.length-1; i++){
+            pomocniczaStrafe[i][1] = listaStrafe.get(i).getWSetSize();
+        }
+    }
+   public void setMinSizeControl(){
+        for(int i = 0; i < pomocniczaControl.length-1; i++){
+            if(pomocniczaControl[i][1] == 0){
+                pomocniczaControl[i][1] = listaControl.get(i).getWSetSize();
+            }else
+                if(pomocniczaControl[i][3] <=3){
+                    pomocniczaControl[i][1]--;
+                }
+                if(pomocniczaControl[i][3] >=7){
+                    pomocniczaControl[i][1]++;
+                }
         }
     }
     public void execution(){     //
-        while(!listaProp.isEmpty()){
-            
+        Page page;
+        boolean isDone = false;
+        while(!isDone){
+            isDone = true;
+            for(int i = 0; i < listaProp.size(); i++){
+                if(!listaProp.get(i).isDone()){
+                    page = listaProp.get(i).getPage();
+                if(!ramProp.contains(page) && ramProp.add(page)){
+                    pomocniczaProp[i][2]++;
+                }else{
+                    LRU.errorHandle(ramProp, page, pomocniczaProp);
+                    pomocniczaProp[i][2]++;
+                }
+                if(isDone == true && !listaProp.get(i).isDone() ){
+                        isDone = false;
+                       }
+                }
+            }
+        }
+        while(!isDone){
+            isDone = true;
+            for(int i = 0; i < listaEqual.size(); i++){
+                if(!listaEqual.get(i).isDone()){
+                    page = listaEqual.get(i).getPage();
+                    if(!ramEqual.contains(page) && ramEqual.add(page)){
+                        pomocniczaEqual[i][2]++;
+                    }else{
+                        LRU.errorHandle(ramEqual, page, pomocniczaEqual);
+                        pomocniczaEqual[i][2]++;
+                    }
+                    if(isDone == true && !listaEqual.get(i).isDone() ){
+                        isDone = false;
+                    }
+                }
+            }
+        }
+        while(!isDone){
+            isDone = true;
+            for(int i = 0; i < listaControl.size(); i++){
+                if(!listaControl.get(i).isDone()){
+                    page = listaControl.get(i).getPage();
+                    if(!ramControl.contains(page) && ramControl.add(page)){
+                        pomocniczaControl[i][2]++;
+                    }else{
+                        LRU.errorHandle(ramControl, page, pomocniczaControl);
+                        pomocniczaControl[i][2]++;
+                    }
+                    if(isDone == true && !listaControl.get(i).isDone() ){
+                        isDone = false;
+                    }
+                }
+            }
+        }
+        while(!isDone){
+            isDone = true;
+            for(int i = 0; i < listaStrafe.size(); i++){
+                if(!listaStrafe.get(i).isDone()){
+                    page = listaStrafe.get(i).getPage();
+                    if(!ramStrafe.contains(page) && ramStrafe.add(page)){
+                        pomocniczaStrafe[i][2]++;
+                    }else{
+                        LRU.errorHandle(ramStrafe, page, pomocniczaStrafe);
+                        pomocniczaStrafe[i][2]++;
+                    }
+                    if(isDone == true && !listaStrafe.get(i).isDone() ){
+                        isDone = false;
+                    }
+                }
+            }
         }
         //czy zostały jeszcze jakiekolwiek procesy na którejkolwiek liście
     }
     public void printErrors(){
-        System.out.println("Ilość błędów dla LRU: "  +   kolejkaLRU.getTotal());
-        System.out.println("Ilość błędów dla ALRU: "  +   kolejkaALRU.getTotal());
-        System.out.println("Ilość błędów dla FIFO: "  +   kolejkaFIFO.getTotal());
-        System.out.println("Ilość błędów dla OPT: "  +   kolejkaOPT.getTotal());
-        System.out.println("Ilość błędów dla losowego: "  +   kolejkaRand.getTotal());
+        int suma = 0;
+        for(int i = 0; i < pomocniczaProp.length; i++){
+            suma += pomocniczaProp[i][3];
         }
+        System.out.println("Ilość błędów dla przydziału proporcjonalnego: "  +   suma);
+        suma = 0;
+        for(int i = 0; i < pomocniczaControl.length; i++){
+            suma += pomocniczaControl[i][3];
+        }
+        System.out.println("Ilość błędów dla sterowania częstością błędów: "  +   suma);
+        suma = 0;
+        for(int i = 0; i < pomocniczaEqual.length; i++){
+            suma += pomocniczaEqual[i][3];
+        }
+        System.out.println("Ilość błędów dla równego przydziału: "  +   suma);
+        suma = 0;
+        for(int i = 0; i < pomocniczaStrafe.length; i++){
+            suma += pomocniczaStrafe[i][3];
+        }
+        System.out.println("Ilość błędów dla strefowego: "  +   suma);
+    }
     
 
 }
