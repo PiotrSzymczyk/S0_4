@@ -37,8 +37,8 @@ public class Proces {
             }
         }
         for(int i = (int) (Math.random()*pages.size()/8); i > 0; i--){ // Na każde 8 odwołań jedna strona nieporządku
-            pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
-            pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
+            pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
+            pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
         }
     }
     
@@ -65,8 +65,8 @@ public class Proces {
             }
         }
         // Dodanie 2 stron dla zakłócenia lokalnosci odwaolan
-        pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
-        pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*5)]);
+        pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
+        pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
     }
     
     private void setWSetSize(){

@@ -95,10 +95,10 @@ public class Sheluder {
             for(int i = 0; i < listaProp.size(); i++){
                 if(!listaProp.get(i).isDone()){
                     page = listaProp.get(i).getPage();
-                if(!ramProp.contains(page) && ramProp.add(page)){
+                if(!ramProp.contains(page) && !ramProp.add(page)){
+                    LRU.errorHandle(ramProp, page, pomocniczaProp, listaProp);
                     pomocniczaProp[i][2]++;
                 }else{
-                    LRU.errorHandle(ramProp, page, pomocniczaProp);
                     pomocniczaProp[i][2]++;
                 }
                 if(isDone == true && !listaProp.get(i).isDone() ){
@@ -112,10 +112,11 @@ public class Sheluder {
             for(int i = 0; i < listaEqual.size(); i++){
                 if(!listaEqual.get(i).isDone()){
                     page = listaEqual.get(i).getPage();
-                    if(!ramEqual.contains(page) && ramEqual.add(page)){
+                    if(!ramEqual.contains(page) && !ramEqual.add(page)){
+                        LRU.errorHandle(ramEqual, page, pomocniczaEqual, listaEqual);
                         pomocniczaEqual[i][2]++;
+                        pomocniczaEqual[i][3]++;
                     }else{
-                        LRU.errorHandle(ramEqual, page, pomocniczaEqual);
                         pomocniczaEqual[i][2]++;
                     }
                     if(isDone == true && !listaEqual.get(i).isDone() ){
@@ -133,17 +134,17 @@ public class Sheluder {
             for(int i = 0; i < listaControl.size(); i++){
                 if(!listaControl.get(i).isDone()){
                     page = listaControl.get(i).getPage();
-                    if(!ramControl.contains(page) && ramControl.add(page)){
+                    if(!ramControl.contains(page) && !ramControl.add(page)){
+                        LRU.errorHandle(ramControl, page, pomocniczaControl, listaControl);
+                        pomocniczaControl[i][3]++;
                         pomocniczaControl[i][2]++;
                     }else{
-                        LRU.errorHandle(ramControl, page, pomocniczaControl);
                         pomocniczaControl[i][2]++;
                     }
                     if(isDone == true && !listaControl.get(i).isDone() ){
                         isDone = false;
                     }
                 }
-            }
         }
         licznik = 0;
         while(!isDone){
@@ -155,11 +156,14 @@ public class Sheluder {
             for(int i = 0; i < listaStrafe.size(); i++){
                 if(!listaStrafe.get(i).isDone()){
                     page = listaStrafe.get(i).getPage();
-                    if(!ramStrafe.contains(page) && ramStrafe.add(page)){
+                    if(!ramStrafe.contains(page) && !ramStrafe.add(page)){
+                        LRU.errorHandle(ramStrafe, page, pomocniczaStrafe, listaStrafe);
                         pomocniczaStrafe[i][2]++;
+
+                        pomocniczaStrafe[i][3]++;
                     }else{
-                        LRU.errorHandle(ramStrafe, page, pomocniczaStrafe);
                         pomocniczaStrafe[i][2]++;
+                    }
                     }
                     if(isDone == true && !listaStrafe.get(i).isDone() ){
                         isDone = false;

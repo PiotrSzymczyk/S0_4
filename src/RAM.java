@@ -32,15 +32,6 @@ public class RAM {
             return true;
         } else return false;
     }
-    public boolean add(Page p,int min, int maks){
-        if( ! isFull() ){
-            int i = min;
-            while(ram[i] != null&& i < maks) i++;
-            ram[i] = p;
-            p.setModB(1);
-            return true;
-        } else return false;
-    }
     public boolean add(int index, Page p){
         if( ram[index] == null){
             ram[index] = p;

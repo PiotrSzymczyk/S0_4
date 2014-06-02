@@ -22,11 +22,11 @@ public class LRU{
         }
         memory.set(pom, page);
     }
-    public static void errorHandle(RAM memory, Page page, int[][]tab){
+    public static void errorHandle(RAM memory, Page page, int[][]tab, LinkedList<Proces> procesy){
         int spr = 0;
         int pom = 0;
         for(int i = 0; i < memory.getSize(); i++){
-            if(tab[i][1] < tab[i][2]){
+            if(tab[procesy.indexOf(memory.get(i).getProces())][1] < tab[procesy.indexOf(memory.get(i).getProces())][2]){
                 if(memory.get(i).getProces().lastTimeUsed(memory.get(i)) > spr){
                     spr = memory.get(i).getProces().lastTimeUsed(memory.get(i));
                     pom = i;
