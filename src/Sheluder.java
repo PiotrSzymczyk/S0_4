@@ -61,7 +61,7 @@ public class Sheluder {
             pomocniczaControl[i][1] = 0;
             pomocniczaSphere[i][1] = 0;
         }
-        /*      Tu jak byś mi nie ufał, gamoniu. No żeby tak Procesu skopiować nie umieć... Zawiodłeś mnie po raz ostatni, admirale. 
+        /* 
         for(Proces p : prezent){
                 System.out.print(p.getNumOfRef() + " ");
         } System.out.println();
@@ -89,7 +89,7 @@ public class Sheluder {
     }
     public void setMinSizeProp(){
          for(int i = 0; i < pomocniczaProp.length; i++){
-            pomocniczaProp[i][1] = listaProp.get(i).getSize()/3;
+            pomocniczaProp[i][1] = listaProp.get(i).getSize()/4;
         }
     }
     public void setMinSizeStrafe(){
@@ -135,6 +135,7 @@ public class Sheluder {
                 
             }
         }
+                    
         isDone =false;
         while(!isDone){
             isDone = true;

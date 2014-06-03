@@ -28,7 +28,7 @@ public class LRU{
         int miejsce = 0;
         for(int i = 0; i < memory.getSize(); i++){
             miejsce = procesy.indexOf(memory.get(i).getProces());
-            if(tab[miejsce][1] < tab[miejsce][2]){
+            if(tab[miejsce][1] <= tab[miejsce][2]){
                 if(memory.get(i).getProces().lastTimeUsed(memory.get(i)) > spr){
                     spr = memory.get(i).getProces().lastTimeUsed(memory.get(i));
                     pom = i;
