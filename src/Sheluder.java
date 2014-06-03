@@ -14,47 +14,73 @@ public class Sheluder {
     RAM ramProp;
     RAM ramEqual;
     RAM ramControl;
-    RAM ramStrafe;
+    RAM ramSphere;
     int [][]pomocniczaProp;
     int [][]pomocniczaEqual;
     int [][]pomocniczaControl;
-    int [][]pomocniczaStrafe;
+    int [][]pomocniczaSphere;
     LinkedList<Proces> listaProp;
     LinkedList<Proces> listaEqual;
     LinkedList<Proces> listaControl;
-    LinkedList<Proces> listaStrafe;
+    LinkedList<Proces> listaSphere;
     public Sheluder(int rozmiarRAMu,LinkedList<Proces> prezent){
+        
         ramProp = new RAM(rozmiarRAMu);
         ramEqual = new RAM(rozmiarRAMu);
         ramControl = new RAM(rozmiarRAMu);
-        ramStrafe = new RAM(rozmiarRAMu);
+        ramSphere = new RAM(rozmiarRAMu);
         listaProp = new LinkedList<Proces>();
         listaEqual = new LinkedList<Proces>();
         listaControl = new LinkedList<Proces>();
-        listaStrafe = new LinkedList<Proces>();
+        listaSphere = new LinkedList<Proces>();
         pomocniczaProp = new int[prezent.size()][4];
         pomocniczaEqual = new int[prezent.size()][4]; // tablice 1sza linia zawiera numer procesu, 2ga liczbę zapewnianych ramek
         pomocniczaControl = new int[prezent.size()][4]; // 3cia liczbę stron w ramie, 4-ta liczbę błędów 
-        pomocniczaStrafe = new int[prezent.size()][4];
+        pomocniczaSphere = new int[prezent.size()][4];
         for(int i = 0; i < prezent.size(); i++){
             listaProp.add(prezent.get(i).clone());
             listaEqual.add(prezent.get(i).clone());
             listaControl.add(prezent.get(i).clone());
-           listaStrafe.add(prezent.get(i).clone());
+            listaSphere.add(prezent.get(i).clone());
         }
         for(int i = 0; i < prezent.size(); i++){
             pomocniczaProp[i][0] = i;
             pomocniczaEqual[i][0] = i;
             pomocniczaControl[i][0] = i;
-            pomocniczaStrafe[i][0] = i;
+            pomocniczaSphere[i][0] = i;
             pomocniczaProp[i][3] = 0;
             pomocniczaEqual[i][3] = 0;
             pomocniczaControl[i][3] = 0;
-            pomocniczaStrafe[i][3] = 0;
-            /*for(Proces p : prezent){
-                System.out.print(p.getNumOfRef() + " ");
-            }*/
+            pomocniczaSphere[i][3] = 0;
+            pomocniczaProp[i][2] = 0;
+            pomocniczaEqual[i][2] = 0;
+            pomocniczaControl[i][2] = 0;
+            pomocniczaSphere[i][2] = 0;
+            pomocniczaProp[i][1] = 0;
+            pomocniczaEqual[i][1] = 0;
+            pomocniczaControl[i][1] = 0;
+            pomocniczaSphere[i][1] = 0;
         }
+        /*      Tu jak byś mi nie ufał, gamoniu. No żeby tak Procesu skopiować nie umieć... Zawiodłeś mnie po raz ostatni, admirale. 
+        for(Proces p : prezent){
+                System.out.print(p.getNumOfRef() + " ");
+        } System.out.println();
+        for(Proces p : listaProp){
+                System.out.print(p.getNumOfRef() + " ");
+        } System.out.println();
+        for(Proces p : listaEqual){
+                System.out.print(p.getNumOfRef() + " ");
+        } System.out.println();
+        for(Proces p : listaSphere){
+                System.out.print(p.getNumOfRef() + " ");
+        } System.out.println();
+        for(Proces p : listaControl){
+                System.out.print(p.getNumOfRef() + " ");
+        } System.out.println();
+        // A tu ciąg odwołań (pacz, działa, eureka)
+        listaProp.getFirst().print();
+        prezent.getFirst().print();
+        */
     }
     public void setMinSizeEqual(){
         for(int i = 0; i < pomocniczaEqual.length; i++){
@@ -67,8 +93,8 @@ public class Sheluder {
         }
     }
     public void setMinSizeStrafe(){
-        for(int i = 0; i < pomocniczaStrafe.length; i++){
-            pomocniczaStrafe[i][1] = listaStrafe.get(i).getWSetSize();
+        for(int i = 0; i < pomocniczaSphere.length; i++){
+            pomocniczaSphere[i][1] = listaSphere.get(i).getWSetSize();
         }
     }
    public void setMinSizeControl(){
@@ -156,15 +182,15 @@ public class Sheluder {
                 setMinSizeStrafe();
             }
             isDone = true;
-            for(int i = 0; i < listaStrafe.size(); i++){
-                if(!listaStrafe.get(i).isDone()){
-                    page = listaStrafe.get(i).getPage();
-                    if(!ramStrafe.contains(page) && !ramStrafe.add(page)){
-                        LRU.errorHandle(ramStrafe, page, pomocniczaStrafe, listaStrafe);
-                        pomocniczaStrafe[i][2]++;
-                        pomocniczaStrafe[i][3]++;
-                    }else if(!ramStrafe.contains(page)){
-                        pomocniczaStrafe[i][2]++;
+            for(int i = 0; i < listaSphere.size(); i++){
+                if(!listaSphere.get(i).isDone()){
+                    page = listaSphere.get(i).getPage();
+                    if(!ramSphere.contains(page) && !ramSphere.add(page)){
+                        LRU.errorHandle(ramSphere, page, pomocniczaSphere, listaSphere);
+                        pomocniczaSphere[i][2]++;
+                        pomocniczaSphere[i][3]++;
+                    }else if(!ramSphere.contains(page)){
+                        pomocniczaSphere[i][2]++;
                     }
                 
                 isDone = false;
@@ -191,8 +217,8 @@ public class Sheluder {
         }
         System.out.println("Ilość błędów dla równego przydziału: "  +   suma);
         suma = 0;
-        for(int i = 0; i < pomocniczaStrafe.length; i++){
-            suma += pomocniczaStrafe[i][3];
+        for(int i = 0; i < pomocniczaSphere.length; i++){
+            suma += pomocniczaSphere[i][3];
         }
         System.out.println("Ilość błędów dla strefowego: "  +   suma);
     }

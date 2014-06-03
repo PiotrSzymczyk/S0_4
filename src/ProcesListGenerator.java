@@ -20,8 +20,8 @@ public class ProcesListGenerator {
         for(int i=0; i < arrayLength; i++){
             list.add(new Proces(interval));
         }
-        System.out.print("\n_10Generate ");
-        return list;
+        System.out.print("\n_20Generate " );
+            return list;
     }
     /**
      * Tworzy listę o zadanej długości zawierającą procesy o zadanej ilości stron 

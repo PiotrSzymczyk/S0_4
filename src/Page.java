@@ -10,10 +10,11 @@
 public class Page {
     private int modB;
     private Proces container;
-    
-    public Page(Proces p){
+    int num;
+    public Page(int n,Proces p){
         modB = 0;
         container = p;
+        num = n;
     }
     public void setModB(int b){
         modB = b;

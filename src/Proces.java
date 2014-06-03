@@ -25,7 +25,7 @@ public class Proces implements Cloneable {
         pages = new LinkedList();
         used = new LinkedList();
         for(int i = 0; i < pageList.length; i++){
-            pageList[i] = new Page(this);
+            pageList[i] = new Page(i,this);
         }
         for(int i = (int) Math.random()*4 + 2; i > 0; i--){         // i = ilość stref (1-5)
             int j = (int) Math.random()*pageList.length;            // j = wielkość strefy
@@ -54,7 +54,7 @@ public class Proces implements Cloneable {
         pages = new LinkedList();
         used = new LinkedList();
         for(int i = 0; i < pageList.length; i++){
-            pageList[i] = new Page(this);
+            pageList[i] = new Page(i,this);
         }
         for(int i = (int) (Math.random()*4 + 2); i > 0; i--){         // i = ilość stref (2-10)
             int j = (int) (Math.random()*pageList.length)*4/5;            // j = wielkość strefy
@@ -64,19 +64,30 @@ public class Proces implements Cloneable {
                     pages.add(pageList[l+n]);
                 }
             }
-        }
+        } 
         // Dodanie 2 stron dla zakłócenia lokalnosci odwaolan
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
     }
-     public Proces(int inter, Page[] pageL, int wSetLength, LinkedList<Page> pag, LinkedList<Page> use){
+     /**
+     * Tworzy kopię procesu
+     */
+    public Proces(int inter, Page[] pageL, int wSetLength, LinkedList<Page> pag, LinkedList<Page> use){
         pageErrors = 0;
         interval = inter;
-        pageList = pageL.clone();
+        pageList = new Page[pageL.length];
         wSetLen = wSetLength;
         pages = new LinkedList<>();
-        for(Page p :pag){
-            pages.add(new Page(this));
+        
+        for(int i = 0; i < pageList.length; i++){   // skopiuj pafeList (ma swje strony)
+            pageList[i] = new Page(i,this);
+        }
+        
+        int i;
+        for(Page p : pag){                          // dodaj referencje do odp stron w odp kolejności
+            i = 0;
+            while(!pageL[i].equals(p)) i++;
+            pages.add(pageList[i]);
         }
         used = new LinkedList<>();
         
@@ -84,6 +95,11 @@ public class Proces implements Cloneable {
      }
     public Proces clone(){
         return new Proces(interval, pageList, wSetLen, pages, used);
+    }
+    public void  print(){
+        for(Page p : pages)
+            System.out.print(p.num + " ");
+        System.out.println();
     }
     private void setWSetSize(){
         wSetLen = 0;
