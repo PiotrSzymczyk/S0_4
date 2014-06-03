@@ -6,7 +6,7 @@ import java.util.LinkedList;
  * oraz moment ich pojawienia się.
  * @author Piotrek
  */
-public class Proces {
+public class Proces implements Cloneable {
     private Page[] pageList;
     private LinkedList<Page> pages; // Odwołania do kolejnych stron
     private LinkedList<Page> used; 
@@ -25,7 +25,7 @@ public class Proces {
         pages = new LinkedList();
         used = new LinkedList();
         for(int i = 0; i < pageList.length; i++){
-            pageList[i] = new Page(i, this);
+            pageList[i] = new Page(this);
         }
         for(int i = (int) Math.random()*4 + 2; i > 0; i--){         // i = ilość stref (1-5)
             int j = (int) Math.random()*pageList.length;            // j = wielkość strefy
@@ -45,6 +45,7 @@ public class Proces {
     /**
      * Tworzy proces o 3 - 20 stronach i losowym, (2-5)-strefowym ciągu odwołań
      */
+     
      public Proces(int in){
         pageErrors = 0;
         interval = in;
@@ -53,10 +54,10 @@ public class Proces {
         pages = new LinkedList();
         used = new LinkedList();
         for(int i = 0; i < pageList.length; i++){
-            pageList[i] = new Page(i, this);
+            pageList[i] = new Page(this);
         }
-        for(int i = (int) Math.random()*4 + 2; i > 0; i--){         // i = ilość stref (1-5)
-            int j = (int) Math.random()*pageList.length;            // j = wielkość strefy
+        for(int i = (int) (Math.random()*4 + 2); i > 0; i--){         // i = ilość stref (2-10)
+            int j = (int) (Math.random()*pageList.length)*4/5;            // j = wielkość strefy
             int l = (int) (Math.random() * (pageList.length - j));  // l = strona od której się strefa zaczyna
             for(int k = (int) (Math.random()*4 + 1); k > 0; k--){   // powtórzenie strefy (1-4) razy
                 for(int n = 0; n < j; n++){
@@ -68,7 +69,22 @@ public class Proces {
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
         pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
     }
-    
+     public Proces(int inter, Page[] pageL, int wSetLength, LinkedList<Page> pag, LinkedList<Page> use){
+        pageErrors = 0;
+        interval = inter;
+        pageList = pageL.clone();
+        wSetLen = wSetLength;
+        pages = new LinkedList<>();
+        for(Page p :pag){
+            pages.add(new Page(this));
+        }
+        used = new LinkedList<>();
+        
+         
+     }
+    public Proces clone(){
+        return new Proces(interval, pageList, wSetLen, pages, used);
+    }
     private void setWSetSize(){
         wSetLen = 0;
         for(Page p : pageList){
@@ -78,7 +94,6 @@ public class Proces {
             }
         }
     }
-    
     public int getWSetSize(){
         return wSetLen;
     }
@@ -101,6 +116,9 @@ public class Proces {
 
     public int getSize(){
         return pageList.length;
+    }
+    public int getNumOfRef(){
+        return pages.size();
     }
     public int lastTimeUsed(Page p){
         int tmp = Integer.MAX_VALUE;

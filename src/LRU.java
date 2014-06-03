@@ -25,12 +25,14 @@ public class LRU{
     public static void errorHandle(RAM memory, Page page, int[][]tab, LinkedList<Proces> procesy){
         int spr = 0;
         int pom = 0;
+        int miejsce = 0;
         for(int i = 0; i < memory.getSize(); i++){
-            if(tab[procesy.indexOf(memory.get(i).getProces())][1] < tab[procesy.indexOf(memory.get(i).getProces())][2]){
+            miejsce = procesy.indexOf(memory.get(i).getProces());
+            if(tab[miejsce][1] < tab[miejsce][2]){
                 if(memory.get(i).getProces().lastTimeUsed(memory.get(i)) > spr){
                     spr = memory.get(i).getProces().lastTimeUsed(memory.get(i));
                     pom = i;
-                    tab[i][2]--;
+                    tab[miejsce][2]--;
                 }
             }
         }

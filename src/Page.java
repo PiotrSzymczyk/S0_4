@@ -9,11 +9,9 @@
  */
 public class Page {
     private int modB;
-    private int num;
     private Proces container;
     
-    public Page(int n, Proces p){
-        num = n;
+    public Page(Proces p){
         modB = 0;
         container = p;
     }

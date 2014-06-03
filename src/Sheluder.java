@@ -15,10 +15,6 @@ public class Sheluder {
     RAM ramEqual;
     RAM ramControl;
     RAM ramStrafe;
-    int errorNumberProp;
-    int errorNumberEqual;
-    int errorNumberControl;
-    int errorNumberStrafe;
     int [][]pomocniczaProp;
     int [][]pomocniczaEqual;
     int [][]pomocniczaControl;
@@ -27,31 +23,37 @@ public class Sheluder {
     LinkedList<Proces> listaEqual;
     LinkedList<Proces> listaControl;
     LinkedList<Proces> listaStrafe;
-    LinkedList<Proces> lista;
     public Sheluder(int rozmiarRAMu,LinkedList<Proces> prezent){
-        lista = prezent;
-        errorNumberProp = 0;
-        errorNumberEqual = 0;
-        errorNumberControl = 0;
-        errorNumberStrafe = 0;
         ramProp = new RAM(rozmiarRAMu);
         ramEqual = new RAM(rozmiarRAMu);
         ramControl = new RAM(rozmiarRAMu);
         ramStrafe = new RAM(rozmiarRAMu);
-        listaProp = (LinkedList<Proces>) prezent.clone();
-        listaEqual = (LinkedList<Proces>) prezent.clone();
-        listaControl = (LinkedList<Proces>) prezent.clone();
-        listaStrafe = (LinkedList<Proces>) prezent.clone();
+        listaProp = new LinkedList<Proces>();
+        listaEqual = new LinkedList<Proces>();
+        listaControl = new LinkedList<Proces>();
+        listaStrafe = new LinkedList<Proces>();
         pomocniczaProp = new int[prezent.size()][4];
         pomocniczaEqual = new int[prezent.size()][4]; // tablice 1sza linia zawiera numer procesu, 2ga liczbę zapewnianych ramek
-        pomocniczaControl = new int[prezent.size()][4]; // 3cia liczbę procesów w ramie, 4-ta liczbę błędów 
+        pomocniczaControl = new int[prezent.size()][4]; // 3cia liczbę stron w ramie, 4-ta liczbę błędów 
         pomocniczaStrafe = new int[prezent.size()][4];
+        for(int i = 0; i < prezent.size(); i++){
+            listaProp.add(prezent.get(i).clone());
+            listaEqual.add(prezent.get(i).clone());
+            listaControl.add(prezent.get(i).clone());
+           listaStrafe.add(prezent.get(i).clone());
+        }
         for(int i = 0; i < prezent.size(); i++){
             pomocniczaProp[i][0] = i;
             pomocniczaEqual[i][0] = i;
             pomocniczaControl[i][0] = i;
             pomocniczaStrafe[i][0] = i;
-            
+            pomocniczaProp[i][3] = 0;
+            pomocniczaEqual[i][3] = 0;
+            pomocniczaControl[i][3] = 0;
+            pomocniczaStrafe[i][3] = 0;
+            /*for(Proces p : prezent){
+                System.out.print(p.getNumOfRef() + " ");
+            }*/
         }
     }
     public void setMinSizeEqual(){
@@ -60,17 +62,17 @@ public class Sheluder {
         }
     }
     public void setMinSizeProp(){
-         for(int i = 0; i < pomocniczaProp.length-1; i++){
+         for(int i = 0; i < pomocniczaProp.length; i++){
             pomocniczaProp[i][1] = listaProp.get(i).getSize()/3;
         }
     }
     public void setMinSizeStrafe(){
-        for(int i = 0; i < pomocniczaStrafe.length-1; i++){
+        for(int i = 0; i < pomocniczaStrafe.length; i++){
             pomocniczaStrafe[i][1] = listaStrafe.get(i).getWSetSize();
         }
     }
    public void setMinSizeControl(){
-        for(int i = 0; i < pomocniczaControl.length-1; i++){
+        for(int i = 0; i < pomocniczaControl.length; i++){
             if(pomocniczaControl[i][1] == 0){
                 pomocniczaControl[i][1] = listaControl.get(i).getWSetSize();
             }else
@@ -95,18 +97,19 @@ public class Sheluder {
             for(int i = 0; i < listaProp.size(); i++){
                 if(!listaProp.get(i).isDone()){
                     page = listaProp.get(i).getPage();
-                if(!ramProp.contains(page) && !ramProp.add(page)){
-                    LRU.errorHandle(ramProp, page, pomocniczaProp, listaProp);
-                    pomocniczaProp[i][2]++;
-                }else{
-                    pomocniczaProp[i][2]++;
+                    if(!ramProp.contains(page) && !ramProp.add(page)){
+                        LRU.errorHandle(ramProp, page, pomocniczaProp, listaProp);
+                        pomocniczaProp[i][2]++;
+                        pomocniczaProp[i][3]++;
+                    }else if(!ramProp.contains(page)){
+                        pomocniczaProp[i][2]++;
+                    }
+                    isDone = false;
                 }
-                if(isDone == true && !listaProp.get(i).isDone() ){
-                        isDone = false;
-                       }
-                }
+                
             }
         }
+        isDone =false;
         while(!isDone){
             isDone = true;
             for(int i = 0; i < listaEqual.size(); i++){
@@ -116,15 +119,14 @@ public class Sheluder {
                         LRU.errorHandle(ramEqual, page, pomocniczaEqual, listaEqual);
                         pomocniczaEqual[i][2]++;
                         pomocniczaEqual[i][3]++;
-                    }else{
+                    }else if(!ramEqual.contains(page)){
                         pomocniczaEqual[i][2]++;
                     }
-                    if(isDone == true && !listaEqual.get(i).isDone() ){
-                        isDone = false;
-                    }
+                    isDone = false;
                 }
             }
         }
+        isDone = false;
         while(!isDone){
             isDone = true;
             licznik++;
@@ -138,15 +140,16 @@ public class Sheluder {
                         LRU.errorHandle(ramControl, page, pomocniczaControl, listaControl);
                         pomocniczaControl[i][3]++;
                         pomocniczaControl[i][2]++;
-                    }else{
+                    }else if(!ramControl.contains(page)){
                         pomocniczaControl[i][2]++;
                     }
-                    if(isDone == true && !listaControl.get(i).isDone() ){
-                        isDone = false;
-                    }
+                    isDone = false;
+                    
                 }
+            }
         }
         licznik = 0;
+        isDone = false;
         while(!isDone){
             licznik++;
             if(licznik % interval == 0){
@@ -159,18 +162,16 @@ public class Sheluder {
                     if(!ramStrafe.contains(page) && !ramStrafe.add(page)){
                         LRU.errorHandle(ramStrafe, page, pomocniczaStrafe, listaStrafe);
                         pomocniczaStrafe[i][2]++;
-
                         pomocniczaStrafe[i][3]++;
-                    }else{
+                    }else if(!ramStrafe.contains(page)){
                         pomocniczaStrafe[i][2]++;
                     }
-                    }
-                    if(isDone == true && !listaStrafe.get(i).isDone() ){
-                        isDone = false;
-                    }
+                
+                isDone = false;
                 }
             }
         }
+        
         //czy zostały jeszcze jakiekolwiek procesy na którejkolwiek liście
     }
     public void printErrors(){
