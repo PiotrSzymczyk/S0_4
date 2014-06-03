@@ -18,7 +18,7 @@ public class Main {
         int wielkoscRamu;
         int interval;
         int liczbaProcesow;
-        Scanner sc = new Scanner(new FileReader("Test.txt"));
+        Scanner sc = new Scanner(new FileReader("Test2.txt"));
         
         while(sc.hasNextLine()){
                 String linia = sc.nextLine();

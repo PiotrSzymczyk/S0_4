@@ -27,15 +27,16 @@ public class Proces implements Cloneable {
         for(int i = 0; i < pageList.length; i++){
             pageList[i] = new Page(i,this);
         }
-        for(int i = (int) Math.random()*4 + 2; i > 0; i--){         // i = ilość stref (1-5)
-            int j = (int) Math.random()*pageList.length;            // j = wielkość strefy
+        
+        for(int i = (int) (Math.random()*4 + 2); i > 0; i--){         // i = ilość stref (2-10)
+            int j = (int) (Math.random()*pageList.length)*4/5;            // j = wielkość strefy
             int l = (int) (Math.random() * (pageList.length - j));  // l = strona od której się strefa zaczyna
             for(int k = (int) (Math.random()*4 + 1); k > 0; k--){   // powtórzenie strefy (1-4) razy
                 for(int n = 0; n < j; n++){
                     pages.add(pageList[l+n]);
                 }
             }
-        }
+        } 
         for(int i = (int) (Math.random()*pages.size()/8); i > 0; i--){ // Na każde 8 odwołań jedna strona nieporządku
             pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);
             pages.add((int) (Math.random()*pages.size()), pageList[(int) (Math.random()*pageList.length)]);

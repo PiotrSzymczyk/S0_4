@@ -35,7 +35,7 @@ public class ProcesListGenerator {
         for(int i=0; i < arrayLength; i++){
             list.add(new Proces( interval, ammount) );
         }
-        System.out.print("\npseudoRrandGenerate("+ammount+") ");
+        System.out.print("\npseudoRrandGenerate("+(ammount+1)+") ");
         return list;
     }   
 }
